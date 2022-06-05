@@ -36,10 +36,10 @@ export class App {
         }
 
         let viewEditToggleEl = vdom.utils.getVDomEl(
-            "a", ["navbar-brand", "trmrk-navbar-brand"], {"href": "javascript:void(0);"}, [
+            "a", ["navbar-brand", "trmrk-navbar-brand"], { href: trmrk.core.javascriptVoid }, [
                 new VDomTextNode(viewEditToggleName)
             ], {
-                "click": [{
+                click: [{
                     listener: viewEditToggleHandler
                 }]
             });
@@ -61,7 +61,7 @@ export class App {
         let rootNode = new VDomEl({
             nodeName: "main",
             attrs: {
-                "role": "main"
+                role: "main"
             },
             classList: ["container", appClassName],
             childNodes: childNodes
@@ -126,23 +126,29 @@ export class App {
 
         let textAreaWrapperVEl = vdom.utils.getVDomEl(
             "div", ["trmrk-content"], {
-                "style": "display: none"
+                style: "display: none"
             }, [textareaVEl]);
 
         let saveButtonVEl = vdom.utils.getVDomEl("button", [], {
-            "disabled": "disabled"
+            disabled: "disabled",
+            role: "button",
+            "data-toggle": "popover",
+            "data-trigger": "click",
+            title: "Saved to session storage"
         }, [new VDomTextNode("save")], {
             "click": [{
                     listener: e => {
                         let newText = textareaVEl.refreshTextValue();
                         sessionStorage.setItem(key, newText);
+
+                        bsDomUtils.showPopover(saveButtonVEl.domNode, null, 1000);
                     }
                 }]
             });
 
         let chkVEl = vdom.utils.getVDomEl("input", [], {
-            "type": "checkbox" }, [], {
-            "click": [{
+            type: "checkbox" }, [], {
+            click: [{
                     listener: e => {
                         if (chkVEl.domNode.checked) {
                             saveButtonVEl.removeAttr("disabled");

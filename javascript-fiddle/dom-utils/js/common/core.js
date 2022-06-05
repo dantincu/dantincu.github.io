@@ -73,6 +73,7 @@
 }
 
 export class TrmrkCore {
+    javascriptVoid = "javascript:void(0);"
     isLoggingEnabled = false;
     cacheKeyBasePrefix = "trmrk";
 
@@ -441,6 +442,138 @@ export class TrmrkCore {
         
         return retVal;
     };
+
+    bindFuncOrNoop(func, target) {
+        if (this.isOfTypeFunction(func)) {
+            func = func.bind(target);
+        } else {
+            func = (function() {}).bind(target);
+        }
+
+        return func;
+    }
+
+    bindFuncOrDefault(func, target, defaultFunc) {
+        if (this.isOfTypeFunction(func)) {
+            func = func.bind(target);
+        } else {
+            func = defaultFunc.bind(target);
+        }
+
+        return func;
+    }
+
+    valOrNull(value) {
+        if (this.isUndef(value)) {
+            value = null;
+        }
+
+        return value;
+    }
+
+    valOrDefault(value, defaultValue) {
+        if (this.isNullOrUndef(value)) {
+            value = defaultValue;
+        }
+
+        return value;
+    }
+
+    getValOrNull(value, isNotNullPred) {
+        if (!isNotNullPred(value)) {
+            value = null;
+        }
+
+        return value;
+    }
+
+    getValOrDefault(value, isNotNullPred, defaultValue) {
+        if (!isNotNullPred(value)) {
+            value = defaultValue;
+        }
+
+        return value;
+    }
+
+    getValueOrDefault(value, isNotNullPred, defaultValueFactory) {
+        if (!isNotNullPred(value)) {
+            value = defaultValueFactory();
+        }
+
+        return value;
+    }
+
+    objValOrNull(value) {
+        if (!this.isNotNullObj(value)) {
+            value = null;
+        }
+
+        return value;
+    }
+
+    objValOrDefault(value, defaultValue) {
+        if (!this.isNotNullObj(value)) {
+            value = defaultValue;
+        }
+
+        return value;
+    }
+
+    objValueOrDefault(value, defaultValueFactory) {
+        if (!this.isNotNullObj(value)) {
+            value = defaultValueFactory();
+        }
+
+        return value;
+    }
+
+    strValOrNull(value) {
+        if (!this.isOfTypeString(value)) {
+            value = null;
+        }
+
+        return value;
+    }
+
+    strValOrDefault(value, defaultValue) {
+        if (!this.isOfTypeString(value)) {
+            value = defaultValue;
+        }
+
+        return value;
+    }
+
+    strValueOrDefault(value, defaultValueFactory) {
+        if (!this.isOfTypeString(value)) {
+            value = defaultValueFactory();
+        }
+
+        return value;
+    }
+
+    nonEmptyStrValOrNull(value) {
+        if (!this.isNonEmptyString(value)) {
+            value = null;
+        }
+
+        return value;
+    }
+
+    nonEmptyStrValOrDefault(value, defaultValue) {
+        if (!this.isNonEmptyString(value)) {
+            value = defaultValue;
+        }
+
+        return value;
+    }
+
+    nonEmptyStrValueOrDefault(value, defaultValueFactory) {
+        if (!this.isNonEmptyString(value)) {
+            value = defaultValueFactory();
+        }
+
+        return value;
+    }
 };
 
 export class Trmrk {

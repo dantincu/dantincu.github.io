@@ -5,19 +5,24 @@ export class VDomNodeBase {
     isVNode = true;
     isTextNode = false;
 
-    domNode;
-    textValue;
-    data;
+    domNode = null;
+    textValue = null;
+    data = null;
 
     setDomNode(domNode) {
-        this.domNode = domNode;
+        this.domNode = trmrk.core.getValOrNull(
+            domNode,
+            trmrk.core.isNotNullObj);
     }
 
     createDomNode() {
     }
 
     setTextValue(textValue) {
-        this.textValue = textValue;
+        this.textValue = trmrk.core.getValOrNull(
+            textValue,
+            trmrk.core.isOfTypeString
+        );
     }
 
     refreshTextValue() {
@@ -28,6 +33,10 @@ export class VDomNodeBase {
         }
         
         return this.textValue;
+    }
+
+    setData(data) {
+        this.data = trmrk.core.valOrNull(data);
     }
 }
 
@@ -58,56 +67,44 @@ export class VDomTextNode extends VDomNodeBase {
 }
 
 export class VDomEl extends VDomNodeBase {
+    parentVDomEl = null
     nodeName = null;
     attrs = {};
     classList = [];
     events = {};
     childNodes = [];
 
+    onCreated = null;
+    onAppended = null;
+    onRemoved = null;
+
     constructor(props, callback) {
         super();
 
         if (trmrk.core.isNotNullObj(props)) {
-            let domNode, data, textValue, nodeName, classList, attrs, events, childNodes;
-            ({domNode, data, textValue, nodeName, classList, attrs, events, childNodes} = props);
+            let domNode, data, textValue, nodeName, classList, attrs, events, childNodes, onCreated, onAppended, onRemoved, parentVDomEl;
+            ({domNode, data, textValue, nodeName, classList, attrs, events, childNodes, onCreated, onAppended, onRemoved, parentVDomEl} = props);
 
-            this.domNode = domNode;
+            super.setDomNode(domNode);
+            super.setData(data);
 
-            if (!trmrk.core.isNullOrUndef(data)) {
-                this.data = data;
-            }
+            this.textValue = trmrk.core.strValOrNull(textValue);
+            this.parentVDomEl = trmrk.core.objValOrNull(parentVDomEl);
 
-            if (trmrk.core.isNonEmptyString(textValue)) {
-                this.textValue = textValue;
-            }
+            this.nodeName = trmrk.core.getValueOrDefault(
+                nodeName,
+                trmrk.core.isNonEmptyString,
+                () => trmrk.isNotNullObj(domNode) ? domNode.nodeName : null
+            );
 
-            if (trmrk.core.isOfTypeString(nodeName)) {
-                this.nodeName = nodeName;
-            }
+            this.classList = trmrk.core.objValOrDefault(classList, []);
+            this.attrs = trmrk.core.objValOrDefault(attrs, {});
+            this.childNodes = trmrk.core.objValOrDefault(childNodes, []);
+            this.events = trmrk.core.objValOrDefault(events, {});
 
-            if (trmrk.core.isNotNullObj(classList)) {
-                this.classList = classList;
-            } else {
-                this.classList = [];
-            }
-
-            if (trmrk.core.isNotNullObj(attrs)) {
-                this.attrs = attrs;
-            } else {
-                this.attrs = {};
-            }
-
-            if (trmrk.core.isNotNullObj(events)) {
-                this.events = events;
-            } else {
-                this.events = {};
-            }
-
-            if (trmrk.core.isNotNullObj(childNodes)) {
-                this.childNodes = childNodes;
-            } else {
-                this.childNodes = [];
-            }
+            this.onCreated = trmrk.core.bindFuncOrNoop(onCreated, this);
+            this.onAppended = trmrk.core.bindFuncOrNoop(onAppended, this);
+            this.onRemoved = trmrk.core.bindFuncOrNoop(onRemoved, this);
         } else if (trmrk.core.isOfTypeString(props)) {
             this.nodeName = props;
         }
@@ -142,7 +139,9 @@ export class VDomEl extends VDomNodeBase {
             if (trmrk.vdom.utils.textInputElNodeNames.indexOf(this.nodeName) >= 0) {
                 this.domNode.value = textValue;
             } else {
+                this.removeAllEventListeners();
                 this.domNode.textContent = textValue;
+
                 this.refreshChildNodes();
             }
         }
@@ -261,6 +260,8 @@ export class VDomEl extends VDomNodeBase {
         }
 
         this.domNode = domEl;
+        this.onCreated(this);
+
         return domEl;
     }
 
@@ -390,6 +391,8 @@ export class VDomEl extends VDomNodeBase {
         this.domNode.appendChild(vNode.domNode);
 
         this.childNodes.push(vNode);
+        vNode.onAppended(vNode);
+
         return vNode;
     }
 
@@ -400,12 +403,18 @@ export class VDomEl extends VDomNodeBase {
         if (idx >= 0) {
             this.childNodes.splice(idx, 1);
         }
+
+        vNode.removeAllEventListeners();
+        vNode.onRemoved(vNode);
     }
 
     removeAllChildVNodes() {
         while (this.childNodes.length > 0) {
             let vNode = this.childNodes.pop();
-            this.domNode.removeChild(vNode);
+            this.domNode.removeChild(vNode.domNode);
+
+            vNode.removeAllEventListeners();
+            vNode.onRemoved(vNode);
         }
     }
 }
@@ -428,18 +437,21 @@ export class VirtualDomUtils {
         return vNode;
     }
 
-    getVDomEl(nodeName, classList, attrs, childNodes, events, textValue, data, domNode) {
-        let vDomEl = new VDomEl({
+    getVDomEl(nodeName, classList, attrs, childNodes, events, textValue, optsCallback) {
+        let opts = {
             nodeName: nodeName,
             classList: classList,
             attrs: attrs,
             events: events,
             childNodes,
-            textValue: textValue,
-            data: data,
-            domNode: domNode
-        });
+            textValue: textValue
+        };
 
+        if (trmrk.core.isOfTypeFunction(optsCallback)) {
+            optsCallback(opts);
+        }
+
+        let vDomEl = new VDomEl(opts);
         return vDomEl;
     }
 
