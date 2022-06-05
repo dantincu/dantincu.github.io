@@ -1,3 +1,15 @@
+@media only screen and (hover: none) and (pointer: coarse) and (min-width: 800px) and (max-width: 1079.98) {
+    body {
+        font-size: 20px;
+    }
+}
+
+@media only screen and (hover: none) and (pointer: coarse) and (min-width: 1080px) {
+    body {
+        font-size: 24px;
+    }
+}
+
 .trmrk-app-edit-src.container {
     margin-top: 60px;
 }
