@@ -36,7 +36,7 @@ export class App {
         }
 
         let viewEditToggleEl = vdom.utils.getVDomEl(
-            "a", ["navbar-brand"], {"href": "javascript:void(0);"}, [
+            "a", ["navbar-brand", "trmrk-navbar-brand"], {"href": "javascript:void(0);"}, [
                 new VDomTextNode(viewEditToggleName)
             ], {
                 "click": [{
@@ -52,9 +52,7 @@ export class App {
                 "bg-dark",
                 "fixed-top",
                 "trmrk-nav-bar"
-        ], {}, [
-            vdom.utils.getVDomEl("a", ["navbar-brand", "trmrk-navbar-brand"], {}, [viewEditToggleEl])
-        ]);
+        ], {}, [viewEditToggleEl]);
 
         return rootEl;
     }

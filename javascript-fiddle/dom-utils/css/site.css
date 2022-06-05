@@ -1,37 +1,37 @@
-@media only screen and (hover: none) and (pointer: coarse) {
-    body {
-        font-size: 24px;
-    }
-}
-
 body {
-    font-size: 24px;
+    font-size: 2em;
 }
 
 .trmrk-app-edit-src.container {
-    margin-top: 60px;
+    margin-top: 3em;
 }
 
 nav.trmrk-nav-bar.navbar.fixed-top > a.trmrk-navbar-brand.navbar-brand {
+    font-size: 1em;
     margin-left: 10px;
 }
 
 .trmrk-app-edit-src.container label.trmrk-label > input {
-    margin-left: 10px;
+    margin-left: 1em;
 }
 
 .trmrk-app-edit-src.container .trmrk-summary {
-    height: 40px;
+    height: 2em;
 }
 
 .trmrk-app-edit-src.container .trmrk-summary > button {
-    margin-left: 10px;
+    margin-left: 1em;
+}
+
+.trmrk-app-edit-src.container .trmrk-summary input[type="checkbox"] {
+    width: 1em;
+    height: 1em;
 }
 
 .trmrk-app-edit-src.container .trmrk-content {
     width: 100%;
     height: 100vh;
-    margin-bottom: 10px;
+    margin-bottom: 1em;
 }
 
 .trmrk-app-edit-src.container .trmrk-content textarea {
