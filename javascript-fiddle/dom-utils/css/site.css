@@ -1,9 +1,34 @@
-body {
-    font-size: 2em;
+@media (pointer: coarse) {
+    body {
+        font-size: 2em;
+    }
+
+    .trmrk-app-edit-src.container, .trmrk-app.container {
+        margin-top: 3em;
+    }
+    
+    .trmrk-app-edit-src.container .trmrk-content {
+        margin-bottom: 1em;
+    }
+    
+
+    .trmrk-app-edit-src.container .trmrk-summary {
+        height: 2em;
+    }
 }
 
-.trmrk-app-edit-src.container, .trmrk-app.container {
-    margin-top: 3em;
+@media (pointer: fine) {
+    .trmrk-app-edit-src.container, .trmrk-app.container {
+        margin-top: 3.4em;
+    }
+    
+    .trmrk-app-edit-src.container .trmrk-content {
+        margin-bottom: 2em;
+    }
+
+    .trmrk-app-edit-src.container .trmrk-summary {
+        height: 2.2em;
+    }
 }
 
 nav.trmrk-nav-bar.navbar.fixed-top > a.trmrk-navbar-brand.navbar-brand {
@@ -13,10 +38,6 @@ nav.trmrk-nav-bar.navbar.fixed-top > a.trmrk-navbar-brand.navbar-brand {
 
 .trmrk-app-edit-src.container label.trmrk-label > input {
     margin-left: 1em;
-}
-
-.trmrk-app-edit-src.container .trmrk-summary {
-    height: 2em;
 }
 
 .trmrk-app-edit-src.container .trmrk-summary > button {
@@ -31,7 +52,6 @@ nav.trmrk-nav-bar.navbar.fixed-top > a.trmrk-navbar-brand.navbar-brand {
 .trmrk-app-edit-src.container .trmrk-content {
     width: 100%;
     height: 100vh;
-    margin-bottom: 1em;
 }
 
 .trmrk-app-edit-src.container .trmrk-content textarea {
