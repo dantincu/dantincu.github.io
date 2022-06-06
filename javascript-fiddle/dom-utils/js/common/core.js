@@ -75,7 +75,7 @@
 export class TrmrkCore {
     javascriptVoid = "javascript:void(0);"
     isLoggingEnabled = false;
-    cacheKeyBasePrefix = "trmrk";
+    trmrkPrefix = "trmrk";
 
     urlQuery = new URLSearchParams(window.location.search);
 
@@ -174,6 +174,14 @@ export class TrmrkCore {
             }
         } else {
             value = null;
+        }
+
+        return value;
+    }
+
+    toJsonIfObj(value) {
+        if (this.isNotNullObj(value)) {
+            value = JSON.stringify(value);
         }
 
         return value;
@@ -609,6 +617,7 @@ export class Trmrk {
     domUtils = null;
     bsDomUtils = null;
     webStorage = null;
+    vdom = null;
 }
 
 export class EntityBase {
@@ -633,6 +642,7 @@ export class EntityBase {
 
 const trmrkInstn = new Trmrk();
 
+trmrkInstn.types["ValueWrapper"] = ValueWrapper;
 trmrkInstn.types["Trmrk"] = Trmrk;
 trmrkInstn.types["TrmrkCore"] = TrmrkCore;
 trmrkInstn.types["EntityBase"] = EntityBase;

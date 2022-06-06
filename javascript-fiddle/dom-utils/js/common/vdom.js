@@ -534,7 +534,8 @@ export class VirtualDom {
 
 trmrk.types["VDomNodeBase"] = VDomNodeBase;
 trmrk.types["VDomTextNode"] = VDomTextNode;
-trmrk.types["VirtualDom"] = VirtualDom;
+trmrk.types["VDomTextNode"] = VDomTextNode;
+trmrk.types["VDomEl"] = VDomEl;
 
 const vdomInstnt = new VirtualDom();
 trmrk.vdom = vdomInstnt;
