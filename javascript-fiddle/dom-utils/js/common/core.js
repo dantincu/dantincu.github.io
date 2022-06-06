@@ -139,6 +139,14 @@ export class TrmrkCore {
         }
     };
 
+    trimStrIfNotNull(value) {
+        if (this.isNonEmptyString(value)) {
+            value = value.trim();
+        } else {
+            value = null;
+        }
+    }
+
     strTrimStart(str, strToTrim) {
         while (str.startsWith(strToTrim)) {
             str = str.substring(strToTrim.length);
@@ -154,6 +162,22 @@ export class TrmrkCore {
 
         return str;
     };
+
+    tryParseJson(value) {
+        if (this.isNonEmptyString(value)) {
+            value = value.trim();
+
+            try {
+                let json = JSON.parse(value);
+                value = json;
+            } catch (err) {
+            }
+        } else {
+            value = null;
+        }
+
+        return value;
+    }
 
     isOfTypeString(value) {
         let retVal = typeof(value) === "string";

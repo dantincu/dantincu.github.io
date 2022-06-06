@@ -75,7 +75,7 @@ export class App {
         let childNodes = [];
 
         if (trmrk.core.isNonEmptyString(vdomJson)) {
-            childNodes = JSON.parse(vdomJson);
+            childNodes = trmrk.core.tryParseJson(vdomJson);
         }
 
         let rootNode = this.getPageMainEl("trmrk-app", childNodes);

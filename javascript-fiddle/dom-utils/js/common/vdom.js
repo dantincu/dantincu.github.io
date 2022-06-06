@@ -73,6 +73,7 @@ export class VDomEl extends VDomNodeBase {
     classList = [];
     events = {};
     childNodes = [];
+    innerHTML = null;
 
     onCreated = null;
     onAppended = null;
@@ -100,6 +101,7 @@ export class VDomEl extends VDomNodeBase {
             this.classList = trmrk.core.objValOrDefault(classList, []);
             this.attrs = trmrk.core.objValOrDefault(attrs, {});
             this.childNodes = trmrk.core.objValOrDefault(childNodes, []);
+            this.innerHTML = trmrk.core.nonEmptyStrValOrNull(childNodes);
             this.events = trmrk.core.objValOrDefault(events, {});
 
             this.onCreated = trmrk.core.bindFuncOrNoop(onCreated, this);
@@ -116,7 +118,7 @@ export class VDomEl extends VDomNodeBase {
 
     setDomNode(domNode) {
         if (this.domNode) {
-            this.removeAllEventListeners();
+            this.removeDomNode();
         }
 
         super.setDomNode(domNode);
@@ -124,6 +126,8 @@ export class VDomEl extends VDomNodeBase {
 
         this.attrs = {};
         this.classList = [];
+
+        this.refreshChildNodes();
     }
 
     setDomEl(domNode) {
@@ -139,7 +143,7 @@ export class VDomEl extends VDomNodeBase {
             if (trmrk.vdom.utils.textInputElNodeNames.indexOf(this.nodeName) >= 0) {
                 this.domNode.value = textValue;
             } else {
-                this.removeAllEventListeners();
+                this.removeAllEventListeners(true, true);
                 this.domNode.textContent = textValue;
 
                 this.refreshChildNodes();
@@ -147,6 +151,16 @@ export class VDomEl extends VDomNodeBase {
         }
 
         super.setTextValue(textValue);
+    }
+
+    setinnerHTML(innerHTML) {
+        if (this.domNode) {
+            this.removeAllEventListeners(true, true);
+            this.domNode.innerHTML = innerHTML;
+
+            this.innerHTML = innerHTML;
+            this.refreshChildNodes();
+        }
     }
 
     refreshNodeName() {
@@ -219,6 +233,10 @@ export class VDomEl extends VDomNodeBase {
     }
     
     createDomNode() {
+        if (this.domNode) {
+            this.removeDomNode();
+        }
+
         let domEl = document.createElement(this.nodeName);
 
         for (let key of Object.keys(this.attrs)) {
@@ -249,20 +267,32 @@ export class VDomEl extends VDomNodeBase {
             }
         }
 
-        this.childNodes = this.childNodes.map(trmrk.vdom.utils.getOrCreateDomNode);
+        if (trmrk.core.isNonEmptyString(this.innerHTML)) {
+            domEl.innerHTML = this.innerHTML;
+            this.childNodes = [];
+        } else {
+            this.childNodes = this.childNodes.map(trmrk.vdom.utils.getOrCreateDomNode);
 
-        for (let childVNode of this.childNodes) {
-            if (!childVNode.domNode) {
-                childVNode.createDomNode();
+            for (let childVNode of this.childNodes) {
+                if (!childVNode.domNode) {
+                    childVNode.createDomNode();
+                }
+
+                domEl.appendChild(childVNode.domNode);
             }
-
-            domEl.appendChild(childVNode.domNode);
         }
-
+        
         this.domNode = domEl;
         this.onCreated(this);
 
         return domEl;
+    }
+
+    removeDomNode() {
+        this.removeAllEventListeners();
+        this.domNode.remove();
+
+        this.onRemoved();
     }
 
     addAttr(key, value) {
@@ -370,16 +400,24 @@ export class VDomEl extends VDomNodeBase {
         }
     }
 
-    removeAllEventListeners() {
-        for (let type of Object.keys(this.events)) {
-            let eventsArr = this.events[type];
+    removeAllEventListeners(recursive, childrenOnly) {
+        if (!childrenOnly) {
+            for (let type of Object.keys(this.events)) {
+                let eventsArr = this.events[type];
 
-            while (eventsArr.length > 0) {
-                let event = eventsArr.pop();
-                let listener, options;
+                while (eventsArr.length > 0) {
+                    let event = eventsArr.pop();
+                    let listener, options;
 
-                ({listener, options} = event);
-                trmrk.vdom.utils.removeEventListener(this.domNode, type, listener, options);
+                    ({listener, options} = event);
+                    trmrk.vdom.utils.removeEventListener(this.domNode, type, listener, options);
+                }
+            }
+        }
+
+        if (recursive) {
+            for (let childVNode of this.childNodes) {
+                childVNode.removeAllEventListeners(recursive);
             }
         }
 
@@ -411,9 +449,9 @@ export class VDomEl extends VDomNodeBase {
     removeAllChildVNodes() {
         while (this.childNodes.length > 0) {
             let vNode = this.childNodes.pop();
-            this.domNode.removeChild(vNode.domNode);
-
             vNode.removeAllEventListeners();
+
+            this.domNode.removeChild(vNode.domNode);
             vNode.onRemoved(vNode);
         }
     }
