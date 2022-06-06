@@ -39,4 +39,5 @@ nav.trmrk-nav-bar.navbar.fixed-top > a.trmrk-navbar-brand.navbar-brand {
     height: 100%;
     min-height: 100%;
     max-height: 100%;
+    font-family: "consolas";
 }
