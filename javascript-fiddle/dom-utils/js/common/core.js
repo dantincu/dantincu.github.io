@@ -653,6 +653,28 @@ export class TrmrkCore {
 
         return value;
     }
+
+    toStringOrDefault(value, defaultValue) {
+        let strVal = value;
+
+        if (this.isNullOrUndefOrOrNaN(value)) {
+            strVal = defaultValue;
+        } else if (!this.isOfTypeString(value)) {
+            strVal = value.toString();
+        }
+
+        return strVal;
+    }
+
+    toString(value) {
+        let strVal = this.toStringOrDefault(value, "");
+        return strVal;
+    }
+
+    toStringOrNull(value) {
+        let strVal = this.toStringOrDefault(value, null);
+        return strVal;
+    }
 };
 
 export class Trmrk {

@@ -269,7 +269,8 @@ export class VDomEl extends VDomNodeBase {
             domEl.innerHTML = this.innerHTML;
             this.childNodes = [];
         } else {
-            this.childNodes = this.childNodes.map(trmrk.vdom.utils.getOrCreateDomNode);
+            this.childNodes = this.childNodes.map(
+                node => trmrk.vdom.utils.getOrCreateVDomNode(node, true));
 
             for (let childVNode of this.childNodes) {
                 if (!childVNode.domNode) {
@@ -423,7 +424,7 @@ export class VDomEl extends VDomNodeBase {
     }
 
     appendChildVNode(vNode) {
-        vNode = trmrk.vdom.utils.getOrCreateDomNode(vNode);
+        vNode = trmrk.vdom.utils.getOrCreateVDomNode(vNode, true);
         this.domNode.appendChild(vNode.domNode);
 
         this.childNodes.push(vNode);
@@ -459,7 +460,7 @@ export class VirtualDomUtils {
     nonVDomElNodeNames = ["script", "style"];
     textInputElNodeNames = ["input", "textarea"];
 
-    getOrCreateDomNode(node) {
+    getOrCreateVDomNode(node, createDomNode) {
         let vNode = node;
 
         if (!node.isVNode) {
@@ -468,6 +469,10 @@ export class VirtualDomUtils {
             } else {
                 vNode = new VDomEl(node);
             }
+        }
+
+        if (createDomNode && !vNode.domNode) {
+            vNode.createDomNode();
         }
 
         return vNode;
@@ -510,23 +515,37 @@ export class VirtualDomUtils {
 
 export class VirtualDom {
     utils = new VirtualDomUtils();
-    rootVDomEl = null;
+    bodyVDomEl = new VDomEl();
+    appRootVDomEl = new VDomEl();
 
-    init(rootVNodesArr) {
+    init(appRootVDomEl, rootVNodesArr) {
         let rootNode = new VDomEl();
         rootNode.setDomEl(document.body);
         vdom.rootNode = rootNode;
 
-        for (let vNode of rootVNodesArr) {
-            if (!vNode.isVNode) {
-                vNode = this.utils.getOrCreateDomNode(vNode);
-            }
+        if (trmrk.core.isNonEmptyString(appRootVDomEl)) {
+            appRootVDomEl = document.querySelector(appRootVDomEl);
+        }
 
-            if (!vNode.domNode) {
-                vNode.createDomNode();
-                rootNode.appendChildVNode(vNode);
+        if (trmrk.core.isNotNullObj(appRootVDomEl)) {
+            if (!appRootVDomEl.isVNode) {
+                let appRootDomEl = appRootVDomEl;
+                appRootVDomEl = new VDomEl();
+
+                appRootVDomEl.setDomEl(appRootDomEl)
+            }
+        } else {
+            appRootVDomEl = rootNode;
+        }
+
+        if (trmrk.core.isNotNullObj(rootVNodesArr)) {
+            for (let vNode of rootVNodesArr) {
+                appRootVDomEl.appendChildVNode(vNode);
             }
         }
+
+        vdom.appRootVDomEl = appRootVDomEl;
+        return appRootVDomEl;
     }
 }
 

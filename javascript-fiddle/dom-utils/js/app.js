@@ -79,7 +79,7 @@ export class App {
         }
 
         let rootNode = this.getPageMainEl("trmrk-app", childNodes);
-        vdom.init([navBarEl, rootNode]);
+        vdom.init(null, [navBarEl, rootNode]);
 
         if (trmrk.core.isNonEmptyString(cssStr)) {
             domUtils.createAndAppendEl(
@@ -117,7 +117,7 @@ export class App {
         ];
 
         let rootNode = this.getPageMainEl("trmrk-app-edit-src", childNodes);
-        vdom.init([navBarEl, rootNode]);
+        vdom.init(null, [navBarEl, rootNode]);
     }
 
     getEditPageRootNode(key, name, text) {
