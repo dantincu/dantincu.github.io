@@ -72,14 +72,20 @@
     }
 }
 
+export class KeyValuePair {
+    Key = null;
+    Value = null;
+}
+
 export class TrmrkCore {
     javascriptVoid = "javascript:void(0);"
     isLoggingEnabled = false;
     trmrkPrefix = "trmrk";
+    longPressMillis = 400;
 
     urlQuery = new URLSearchParams(window.location.search);
 
-    openUrl(urlSearchParams, inNewTab, pathname, host, https) {
+    navigate(urlSearchParams, inNewTab, pathname, host, https, data, unused) {
         let search = "";
         let scheme = window.location.protocol;
 
@@ -87,7 +93,7 @@ export class TrmrkCore {
             scheme = "http:";
         }
         
-        if (trmrk.core.isNotNullObj(urlSearchParams)) {
+        if (this.isNotNullObj(urlSearchParams)) {
             search = urlSearchParams.toString();
 
             if (trmrk.core.isNonEmptyString(search)) {
@@ -95,11 +101,11 @@ export class TrmrkCore {
             }
         }
 
-        if (!trmrk.core.isNonEmptyString(pathname)) {
+        if (!this.isNonEmptyString(pathname)) {
             pathname = window.location.pathname;
         }
 
-        if (!trmrk.core.isNonEmptyString(host)) {
+        if (!this.isNonEmptyString(host)) {
             host = window.location.host;
 
             if (https !== false) {
@@ -107,10 +113,13 @@ export class TrmrkCore {
             }
         }
 
-        let url = scheme + "//" + host + pathname + search;
+        let relUrl = pathname + search;
+        let url = scheme + "//" + host + relUrl;
         
-        if (inNewTab) {
+        if (inNewTab === true) {
             window.open(url);
+        } else if (this.isOfTypeBoolean(inNewTab)) { // is explicitly set to false
+            window.history.pushState(data, unused, relUrl);
         } else {
             window.location.assign(url);
         }
@@ -675,6 +684,53 @@ export class TrmrkCore {
         let strVal = this.toStringOrDefault(value, null);
         return strVal;
     }
+
+    numOrNull(value) {
+        if (!this.isNotNaNNumber(value)) {
+            value = null;
+        }
+
+        return value;
+    }
+
+    numOrDefault(value, defaultValue) {
+        if (!this.isNotNaNNumber(value)) {
+            value = defaultValue;
+        }
+
+        return value;
+    }
+
+    numberOrDefault(value, defaultValueFactory) {
+        if (!this.isNotNaNNumber(value)) {
+            value = defaultValueFactory();
+        }
+
+        return value;
+    }
+
+    firstOrDefault(arr, predicate) {
+        let retVal = new KeyValuePair();
+
+        for (let i in Object.keys(arr)) {
+            let val = arr[i];
+
+            if (predicate(val, i)) {
+                retVal.Key = i;
+                retVal.Value = val;
+
+                break;
+            }
+        }
+
+        return retVal;
+    }
+
+    applyIfOfTypeFunc(callback, target, argsArr) {
+        if (this.isOfTypeFunction(callback)) {
+            callback.apply(target, argsArr);
+        }
+    }
 };
 
 export class Trmrk {
@@ -712,6 +768,7 @@ export class EntityBase {
 const trmrkInstn = new Trmrk();
 
 trmrkInstn.types["ValueWrapper"] = ValueWrapper;
+trmrkInstn.types["KeyValuePair"] = KeyValuePair;
 trmrkInstn.types["Trmrk"] = Trmrk;
 trmrkInstn.types["TrmrkCore"] = TrmrkCore;
 trmrkInstn.types["EntityBase"] = EntityBase;
