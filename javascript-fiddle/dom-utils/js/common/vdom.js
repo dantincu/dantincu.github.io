@@ -271,11 +271,11 @@ export class VDomEl extends VDomNodeBase {
             let eventsArr = this.events[eventType];
 
             for (let event of eventsArr) {
-                let listener, options;
-                ({listener, options} = event);
+                    let listener, options;
+                    ({listener, options} = event);
 
-                trmrk.vdom.utils.addEventListener(domEl, eventType, listener, options);
-            }
+                    trmrk.vdom.utils.addEventListener(domEl, eventType, listener, options);
+                }
         }
 
         if (trmrk.core.isNonEmptyString(this.textValue)) {
@@ -579,13 +579,13 @@ export class VirtualDomUtils {
                 trmrk.core.longPressMillis);
 
             let onMouseDown = e => {
-                timeout = setTimeout(() => {
+                eventInstn.timeout = setTimeout(() => {
                     eventInstn.isLongPress = true;
                 }, longPressMillis);
             }
 
             let onMouseUp = e => {
-                clearTimeout(timeout);
+                clearTimeout(eventInstn.timeout);
 
                 if (eventInstn.isLongPress) {
                     eventInstn.isLongPress = false;

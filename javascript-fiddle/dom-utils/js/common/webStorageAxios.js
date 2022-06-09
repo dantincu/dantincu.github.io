@@ -10,7 +10,7 @@ export class WebStorageAxios {
 
         let apiResult = new TrmrkAxiosApiResult();
 
-        if (trmrk.core.isNotNullObj(driveItem)) {
+        if (!trmrk.core.isNullOrUndef(data)) {
             apiResult = {
                 isSuccess: true,
                 data: data
