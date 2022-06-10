@@ -582,12 +582,12 @@ export class VirtualDomUtils {
                     altListener(e);
                 }, longPressMillis);
 
-                onMouseDown();
+                onMouseDown(e);
             }
 
             let onMouseUpListener = e => {
                 clearTimeout(eventInstn.timeout);
-                onMouseUp();
+                onMouseUp(e);
 
                 if (eventInstn.isLongPress) {
                     eventInstn.isLongPress = false;
