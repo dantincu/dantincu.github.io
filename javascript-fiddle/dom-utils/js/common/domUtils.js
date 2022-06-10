@@ -93,6 +93,11 @@ export class DomUtils {
             });
         }
     }
+
+    replaceElWith(srcEl, trgEl) {
+        const parentEl = trgEl.parentNode;
+        parentEl.replaceChild(srcEl, trgEl);
+    }
 }
 
 export class BsDomUtils {

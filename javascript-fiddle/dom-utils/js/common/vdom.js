@@ -296,6 +296,7 @@ export class VDomEl extends VDomNodeBase {
                     childVNode.createDomNode();
                 }
 
+                childVNode.parentVDomEl = this;
                 domEl.appendChild(childVNode.domNode);
             }
         }
