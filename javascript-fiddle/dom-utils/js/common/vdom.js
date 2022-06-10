@@ -271,11 +271,11 @@ export class VDomEl extends VDomNodeBase {
             let eventsArr = this.events[eventType];
 
             for (let event of eventsArr) {
-                    let listener, options;
-                    ({listener, options} = event);
-
-                    trmrk.vdom.utils.addEventListener(domEl, eventType, listener, options);
-                }
+                event.listener = trmrk.core.bindFuncOrNoop(event.listener, this);
+                event.altListener = trmrk.core.bindFuncOrNoop(event.altListener, this);
+                
+                trmrk.vdom.utils.addEventListener(domEl, eventType, event);
+            }
         }
 
         if (trmrk.core.isNonEmptyString(this.textValue)) {
@@ -397,7 +397,9 @@ export class VDomEl extends VDomNodeBase {
         }
 
         let srcListener = listener;
-        listener = listener.bind(this);
+
+        listener = trmrk.core.bindFuncOrNoop(listener, this);
+        altListener = trmrk.core.bindFuncOrNoop(altListener, this);
 
         let eventInstnt = new EventOpts({
             eventId: eventId,
@@ -558,34 +560,32 @@ export class VirtualDomUtils {
         }
     }
 
-    removeEventListenerCore(domNode, type, listener, options) {
-        if (trmrk.core.isNullOrUndef(options)) {
-            domNode.removeEventListener(type, listener);
-        } else {
-            domNode.removeEventListener(type, listener, options);
-        }
-    }
-
     addEventListener(domNode, type, eventInstn) {
         let listener, options;
         ({listener, options} = eventInstn);
 
         if (type === this.shortLongMouseUpEventName) {
-            let altListener, longPressMillis;
-            ({altListener, longPressMillis} = eventInstn);
+            let altListener, longPressMillis, onMouseDown, onMouseUp;
+            ({altListener, longPressMillis, onMouseDown, onMouseUp} = eventInstn);
 
             longPressMillis = trmrk.core.numOrDefault(
                 longPressMillis,
                 trmrk.core.longPressMillis);
 
-            let onMouseDown = e => {
+            onMouseDown = trmrk.core.getFuncOrNoop(onMouseDown);
+            onMouseUp = trmrk.core.getFuncOrNoop(onMouseUp);
+
+            let onMouseDownListener = e => {
                 eventInstn.timeout = setTimeout(() => {
                     eventInstn.isLongPress = true;
                 }, longPressMillis);
+
+                onMouseDown();
             }
 
-            let onMouseUp = e => {
+            let onMouseUpListener = e => {
                 clearTimeout(eventInstn.timeout);
+                onMouseUp();
 
                 if (eventInstn.isLongPress) {
                     eventInstn.isLongPress = false;
@@ -595,13 +595,21 @@ export class VirtualDomUtils {
                 }
             };
 
-            eventInstn.onMouseDown = onMouseDown;
-            eventInstn.onMouseUp = onMouseUp;
+            eventInstn.onMouseDown = onMouseDownListener;
+            eventInstn.onMouseUp = onMouseUpListener;
 
-            this.addEventListenerCore(domNode, "mousedown", onMouseDown);
-            this.addEventListenerCore(domNode, "mouseup", onMouseUp);
+            this.addEventListenerCore(domNode, "mousedown", onMouseDownListener);
+            this.addEventListenerCore(domNode, "mouseup", onMouseUpListener);
         } else {
             this.addEventListenerCore(domNode, type, listener, options);
+        }
+    }
+
+    removeEventListenerCore(domNode, type, listener, options) {
+        if (trmrk.core.isNullOrUndef(options)) {
+            domNode.removeEventListener(type, listener);
+        } else {
+            domNode.removeEventListener(type, listener, options);
         }
     }
 

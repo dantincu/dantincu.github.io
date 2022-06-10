@@ -511,6 +511,22 @@ export class TrmrkCore {
         return func;
     }
 
+    getFuncOrNoop(func) {
+        if (!this.isOfTypeFunction(func)) {
+            func = function() {};
+        }
+
+        return func;
+    }
+
+    getFuncOrDefault(func, defaultFunc) {
+        if (!this.isOfTypeFunction(func)) {
+            func = defaultFunc;
+        }
+
+        return func;
+    }
+
     valOrNull(value) {
         if (this.isUndef(value)) {
             value = null;
