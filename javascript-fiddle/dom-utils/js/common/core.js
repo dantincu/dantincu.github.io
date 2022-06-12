@@ -109,6 +109,10 @@ export class TrmrkCore {
             pathname = window.location.pathname;
         }
 
+        if (pathname.startsWith('/')) {
+            pathname = pathname.substring(1);
+        }
+
         if (!this.isNonEmptyString(host)) {
             host = window.location.host;
 
@@ -306,8 +310,14 @@ export class TrmrkCore {
         return retVal;
     }
 
-    isNonEmptyString(value) {
+    isNonEmptyString(value, mustNotBeAllWhiteSpace) {
         let retVal = typeof(value) === "string" && value.length > 0;
+
+        if (retVal && mustNotBeAllWhiteSpace) {
+            value = value.trim();
+            retVal = value.length > 0;
+        }
+
         return retVal;
     }
 
@@ -705,6 +715,19 @@ export class TrmrkCore {
         return strVal;
     }
 
+    stringsEqualIgnoreCase(trgStr, refStr) {
+        let retVal = trgStr === refStr;
+
+        if (!retVal) {
+            trgStr = trgStr.toLowerCase();
+            refStr = refStr.toLowerCase();
+
+            retVal = trgStr === refStr;
+        }
+
+        return retVal;
+    }
+
     numOrNull(value) {
         if (!this.isNotNaNNumber(value)) {
             value = null;
@@ -765,33 +788,12 @@ export class Trmrk {
     vdom = null;
 }
 
-export class EntityBase {
-    __copyProps(src, throwOnUnknownProp = false) {
-        if (src !== null && typeof src === "object") {
-            const srcProps = Object.keys(src);
-            const ownProps = Object.keys(this);
-
-            for (let idx in srcProps) {
-                let prop = srcProps[idx];
-
-                if (throwOnUnknownProp && ownProps.indexOf(prop) < 0) {
-                    var err = "Unknown prop: " + prop;
-                    throw err;
-                } else {
-                    this[prop] = src[prop];
-                }
-            }
-        }
-    }
-}
-
 const trmrkInstn = new Trmrk();
 
 trmrkInstn.types["ValueWrapper"] = ValueWrapper;
 trmrkInstn.types["KeyValuePair"] = KeyValuePair;
 trmrkInstn.types["Trmrk"] = Trmrk;
 trmrkInstn.types["TrmrkCore"] = TrmrkCore;
-trmrkInstn.types["EntityBase"] = EntityBase;
 
 window.trmrk = trmrkInstn;
 export const trmrk = trmrkInstn;
