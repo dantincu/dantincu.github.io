@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="assets/vendors/bootstrap/css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/site.css">
+    </head>
+    <body>
+        <script>
+            (function() {
+                const onloadCore = function() {
+                    /* System.import("../build/src/pages/index/index.js").then(function() {
+                        window.Trmrk.app.init();
+                    });*/
+
+                    window.Trmrk.app.init();
+                }
+
+                let loaded = false;
+
+                const onload = function() {
+                    if (!loaded) {
+                        loaded = true;
+                        window.onload = null;
+
+                        onloadCore();
+                    }
+                };
+
+                window.onload = onload;
+
+                if (window.trmrk) {
+                    onload();
+                }
+            })();
+        </script>
+        <script src="../build/src/pages/index/index.js" type="module" defer></script>
+        <!--script src="assets/vendors/systemJs/system.js" defer></script-->
+    </body>
+</html>
