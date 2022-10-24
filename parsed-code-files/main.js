@@ -3,27 +3,35 @@ export class TrmrkApp {
         bodyFontSize: 'trk-body-font-size'
     }
 
-    fontSizeOpts = [12, 13, 14, 16, 18, 20, 24];
+    fontSizeOpts = [12, 13, 14, 16, 18, 20, 24, 28, 32, 36, 40];
     fontSizeSelectorEl;
     fontSizeSelectorLabelEl;
     fontSize;
+    // bottomStickyEl;
 
     run() {
-        this.fontSizeChanged();
         this.addFontSizeSelector();
-        this.fontSizeSelectorEl.value = this.fontSize;
+        this.fontSizeChanged(true);
 
         window.addEventListener("focus", e => {
-            this.fontSizeChanged();
-            this.fontSizeSelectorEl.value = this.fontSize;
+            this.fontSizeChanged(true);
         });
+
+        // this.addFakeBottomStickyEl();
     }
 
     fontSizeChanged(fontSize) {
-        this.fontSize = fontSize || this.getFontSizeFromStorage() || this.fontSizeOpts[0];
-        document.body.style.fontSize = this.fontSize + "px";
-
-        this.setFontSizeToStorage(this.fontSize);
+        if (fontSize === true) {
+            fontSize = this.getFontSizeFromStorage();
+        }
+        
+        if (fontSize && fontSize !== this.fontSize) {
+            this.fontSize = fontSize;
+            document.body.style.fontSize = this.fontSize + "px";
+            
+            this.fontSizeSelectorEl.value = this.fontSize;
+            this.setFontSizeToStorage(this.fontSize);
+        }
     }
 
     getFontSizeFromStorage() {
@@ -49,16 +57,25 @@ export class TrmrkApp {
             }]);
 
         for (let fontSize of this.fontSizeOpts) {
+            const currentFontSizePx = getComputedStyle(document.body).fontSize;
+            const currentFontSize = parseInt(currentFontSizePx.substring(0, currentFontSizePx.length - 2))
+
+            const attrs = {
+                value: fontSize
+            };
+
+            if (fontSize === currentFontSize){
+                attrs.selected = true;
+            }
+
             const optEl = this.createEl(
-                "option", {
-                    value: fontSize
-                }, null, fontSize);
+                "option", attrs, null, fontSize);
             
             this.fontSizeSelectorEl.append(optEl);
         }
 
         document.body.insertBefore(this.fontSizeSelectorLabelEl, document.body.firstChild);
-        this.fontSizeSelectorLabelEl.after(this.fontSizeSelectorEl);
+        this.fontSizeSelectorLabelEl.append(this.fontSizeSelectorEl);
     }
 
     createEl(nodeName, attrs, events, innerText) {
@@ -88,6 +105,13 @@ export class TrmrkApp {
 
         return el;
     }
+
+    /* addFakeBottomStickyEl() {
+        this.bottomStickyEl = this.createEl(
+            "div", { class: "trk-fake-bottom-sticky" });
+        
+        document.body.append(this.bottomStickyEl);
+    } */
 }
 
 document.addEventListener("DOMContentLoaded", function() {
