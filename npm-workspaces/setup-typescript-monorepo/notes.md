@@ -21,12 +21,12 @@ Here I wrote a summary about the article at [earthly.dev/blog/setup-typescript-m
 > ```
 
 > ## Define the Global package.json File
-> Inside the monorepo-typescript directory, launch the following command:
+> Inside the `monorepo-typescript` directory, launch the following command:
 > 
 > ```
 > npm init -y
 > ```
-> Now, let’s update the /package.json as follows:
+> Now, let's update the /package.json as follows:
 > ```json
 > {
 >   "name": "monorepo-typescript",
@@ -38,7 +38,7 @@ Here I wrote a summary about the article at [earthly.dev/blog/setup-typescript-m
 >   ]
 > }
 > ```
-> With this configuration, every folder inside /packages with a package.json file is considered a local package. When you `run npm install` in the root directory, folders within `packages/` are symlinked to the `node_modules` folder.
+> With this configuration, every folder inside `/packages` with a package.json file is considered a local package. When you `run npm install` in the root directory, folders within `packages/` are symlinked to the `node_modules` folder.
 
 > ## Add the Core Dependencies
 > Install these to your root project's dependencies:  
@@ -121,7 +121,7 @@ Here I wrote a summary about the article at [earthly.dev/blog/setup-typescript-m
 >     }
 > }
 > ```
-> As explained in the [TypeScript documentation](https://www.typescriptlang.org/docs/handbook/project-references.html#composite), set the `composite` option to `true`. Since you’re likely to reference this project in other parts of the monorepo, this enables you to reference this package in other `tsconfig.json`.
+> As explained in the [TypeScript documentation](https://www.typescriptlang.org/docs/handbook/project-references.html#composite), set the `composite` option to `true`. Since you're likely to reference this project in other parts of the monorepo, this enables you to reference this package in other `tsconfig.json`.
 > 
 > Then create a `src` directory:
 > ```
@@ -138,7 +138,7 @@ Here I wrote a summary about the article at [earthly.dev/blog/setup-typescript-m
 > ```
 > npm run build --workspace ./packages/utils
 > ```
-> Make sure to launch it in the root directory of the monorepo. This command executes the `build` script defined in the local `package.json` of the package specified with the `--workspace` flag. Don’t forget that a local package is nothing more than an npm workspace, which is why you need to use the `--workspace` flag.
+> Make sure to launch it in the root directory of the monorepo. This command executes the `build` script defined in the local `package.json` of the package specified with the `--workspace` flag. Don't forget that a local package is nothing more than an npm workspace, which is why you need to use the `--workspace` flag.
 > ## Define a Global tsconfig.json File
 > Initialize a `tsconfig.json` file in the root directory with the following content:
 > ```json
@@ -165,7 +165,7 @@ Here I wrote a summary about the article at [earthly.dev/blog/setup-typescript-m
 >   ]
 > }
 > ```
-Thanks to [TypeScript references](https://www.typescriptlang.org/docs/handbook/project-references.html), you can split a TypeScript project into smaller parts. With the `references` option, you can define the list of packages your TypeScript monorepo consists of. When running `tsc -- build` in the root directory, the TypeScript compiler accesses all packages defined in `references` and compiles them one by one in order.
+Thanks to [TypeScript references](https://www.typescriptlang.org/docs/handbook/project-references.html), you can split a TypeScript project into smaller parts. With the `references` option, you can define the list of packages your TypeScript monorepo consists of. When running `tsc --build` in the root directory, the TypeScript compiler accesses all packages defined in `references` and compiles them one by one in order.
 > 
 > Add a new `build` script in the global `./package.json` file:
 > ```json
@@ -174,13 +174,13 @@ Thanks to [TypeScript references](https://www.typescriptlang.org/docs/handbook/p
 > }
 > ```
 ## Use a Local Package Inside Another Local Package
-> Now, let’s assume you want to use some utility functions from the `@monorepo/utils` in the `@monorepo/ui` package. All you have to do is run the following npm command in the root directory:
+> Now, let's assume you want to use some utility functions from the `@monorepo/utils` in the `@monorepo/ui` package. All you have to do is run the following npm command in the root directory:
 > ```
 > npm install @monorepo/utils --workspace ./packages/ui
 > ```
 > This adds `@monorepo/utils` as a dependency in `@monorepo/utils`.
 > 
-> Take a look at the local `package.json` file inside `./packages/ui` and you’ll see:
+> Take a look at the local `package.json` file inside `./packages/ui` and you'll see:
 > ```json
 > "dependencies": {
 >   "@monorepo/utils": "^1.0.0"
@@ -191,13 +191,13 @@ Thanks to [TypeScript references](https://www.typescriptlang.org/docs/handbook/p
 > import { isEven } from "@monorepo/utils";
 > ```
 > ## Add an External npm Package to a Local Package
-> In this case, don’t run an `npm install` command inside the package folder; that would add the dependency to the local `package.json` file and consequently generate a locale `node_modules` folder. This violates the core idea that a monorepo has only one `node_modules`.
+> In this case, don't run an `npm install` command inside the package folder; that would add the dependency to the local `package.json` file and consequently generate a locale `node_modules` folder. This violates the core idea that a monorepo has only one `node_modules`.
 > 
-> Let’s assume you want to add [moment](https://www.npmjs.com/package/moment) to the `@monorepo/ui` package. Run the following `npm install` command in the root folder of your monorepo:
+> Let's assume you want to add [moment](https://www.npmjs.com/package/moment) to the `@monorepo/ui` package. Run the following `npm install` command in the root folder of your monorepo:
 > ```
 > npm install moment --workspace ./packages/ui
 > ```
-> This installs `moment` in the monorepo’s `node_modules` folder and adds the following section to the local `packages.json` inside `./packages/ui`:
+> This installs `moment` in the monorepo's `node_modules` folder and adds the following section to the local `packages.json` inside `./packages/ui`:
 > ```json
 > "dependencies": {
 >   // ...
