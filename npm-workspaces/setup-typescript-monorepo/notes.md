@@ -50,7 +50,7 @@ Here I wrote a summary about the article at [earthly.dev/blog/setup-typescript-m
 
 > You should add `eslint` and `prettier`:
 > ```
-> npm install eslint prettier @typescript-eslint/eslint-parser @typescript-eslint/eslint-plugin
+> npm install eslint prettier @typescript-eslint/parser @typescript-eslint/eslint-plugin
 > ```
 > Then, create an <u>eslint configuration file</u>. For example, you can initialize a `.eslintrc.json` file as follows:
 > ```json
