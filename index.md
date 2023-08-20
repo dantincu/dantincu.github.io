@@ -7,4 +7,4 @@ A demo for a super basic code parser written in .NET (will be in the nearby futu
 
 [How to setup a typescript monorepo using NPM](./npm-workspaces/setup-typescript-monorepo/notes)
 
-[my notes on the Practical Common Lisp book from gigamonkeys.com](./my notes on the Practical Common Lisp book from gigamonkeys.com)
+[my notes on the Practical Common Lisp book from gigamonkeys.com](./my%20notes%20on%20the%20Practical%20Common%20Lisp%20book%20from%20gigamonkeys.com)
