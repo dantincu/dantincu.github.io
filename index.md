@@ -5,6 +5,6 @@ A super basic html/javascript/css fiddle page: [javascript-fiddle](javascript-fi
 
 A demo for a super basic code parser written in .NET (will be in the nearby future): [parsed-code-files](parsed-code-files/index.html).  
 
-[How to setup a typescript monorepo using NPM](./npm-workspaces/setup-typescript-monorepo/notes.md)
+[How to setup a typescript monorepo using NPM](./npm-workspaces/setup-typescript-monorepo/notes)
 
-[my notes on the Practical Common Lisp book from gigamonkeys.com](./my notes on the Practical Common Lisp book from gigamonkeys.com/index.md)
+[my notes on the Practical Common Lisp book from gigamonkeys.com](./my notes on the Practical Common Lisp book from gigamonkeys.com)
