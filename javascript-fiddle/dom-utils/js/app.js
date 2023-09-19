@@ -63,7 +63,7 @@ export class App {
             attrs: {
                 role: "main"
             },
-            classList: ["container", appClassName],
+            classList: ["container", "container-xxl", appClassName],
             childNodes: childNodes
         });
 

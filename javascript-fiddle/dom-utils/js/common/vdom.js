@@ -200,11 +200,33 @@ export class VDomEl extends VDomNodeBase {
         return this.textValue;
     }
 
+    applyAttrs(){
+        for (let attrName in this.attrs) {
+            this.domNode.setAttribute(
+                attrName,
+                this.attrs[attrName]);
+        }
+    }
+
+    applyClassList(clearFirst) {
+        if (clearFirst) {
+            var classNamesArr = this.domNode.classList.keys();
+
+            for (let className of classNamesArr) {
+                this.domNode.classList.remove(className);
+            }
+        }
+
+        for (let className of this.classList) {
+            this.domNode.classList.add(className);
+        }
+    }
+
     refreshAttrs() {
         this.attrs = {};
 
         for (let i = 0; i < this.domNode.attributes.length; i++) {
-            let attr = this.domNode.attributes[0];
+            let attr = this.domNode.attributes[i];
             let attrName = attr.name;
 
             if (attrName !== "class") {
