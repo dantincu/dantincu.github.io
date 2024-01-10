@@ -1,0 +1,12 @@
+.trmrk-container {
+  padding-top: 1em;
+}
+
+.trmrk-container h1 {
+  text-align: center;
+}
+
+.trmrk-warning {
+  color: #FF0000;
+  cursor: pointer;
+}
