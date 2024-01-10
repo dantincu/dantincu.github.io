@@ -1,2 +1,3 @@
 # Daniel Tincu github web site
-Welcome to my public github website  
+<p>Welcome to my public github website</p>
+<p>You can view a note taking app stub <a href="./turmerik-notes/launch/index.html">here</a></p>
