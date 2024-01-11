@@ -81,10 +81,8 @@
       </p>
 
       <p>
-        <a href="../app-mobile/index.html">Here</a> you can see the current
-        development state of this app (optimized for mobile) or
-        <a href="../app-desktop/index.html">here</a> if you're on a desktop (or
-        big screen) device.
+        <a href="../app/index.html">Here</a> you can see the current development
+        state of this app
       </p>
     </div>
 
@@ -94,25 +92,5 @@
       crossorigin="anonymous"
     ></script>
     <script src="script.js"></script>
-    <script>
-      const userAgent = navigator.userAgent;
-
-      const mobileRegexes = [
-        /Android/i,
-        /webOS/i,
-        /iPhone/i,
-        /iPad/i,
-        /iPod/i,
-        /BlackBerry/i,
-        /Windows Phone/i,
-        ///Windows/i,
-      ];
-
-      if (mobileRegexes.find((regex) => userAgent.match(regex))) {
-        const htmlDoc = document.getElementsByTagName("html")[0];
-
-        htmlDoc.style.fontSize = "3em";
-      }
-    </script>
   </body>
 </html>
