@@ -1,0 +1,48 @@
+{
+  "basePath": "/turmerik-notes",
+  "NoteDirPairs": {
+    "FileNameMaxLength": 100,
+    "TrmrkGuidInputName": "trmrk_guid",
+    "DirNames": {
+      "NoteBook": "[note-book]",
+      "NoteFiles": "[note-files]",
+      "NoteInternals": "[note-internals]",
+      "NoteInternalsPfxes": {
+        "MainPfx": "0",
+        "AltPfx": "t_0",
+        "JoinStr": "-"
+      },
+      "NoteItemsPfxes": {
+        "MainPfx": "",
+        "AltPfx": "t_",
+        "JoinStr": "-"
+      }
+    },
+    "NoteDirNameIdxes": {
+      "MinIdx": 101,
+      "MaxIdx": 799,
+      "IncIdx": false,
+      "FillGapsByDefault": false
+    },
+    "NoteInternalDirNameIdxes": {
+      "MinIdx": 1,
+      "MaxIdx": 99,
+      "IncIdx": true,
+      "FillGapsByDefault": true
+    },
+    "FileNames": {
+      "NoteBookJsonFileName": "[note-book].json",
+      "NoteItemJsonFileName": "[note].json",
+      "NoteItemMdFileName": "[note].md",
+      "PrependTitleToNoteMdFileName": true,
+      "KeepFileName": ".keep"
+    },
+    "FileContents": {
+      "KeepFileContentsTemplate": "{0}",
+      "NoteFileContentsTemplate": "<input type=\"hidden\" name=\"{2}\" value=\"{1}\" />\n\n# {0}  \n\n",
+      "NoteFileContentSectionTemplate": "{0}  \n\n",
+      "ExpectTrmrkGuidInNoteJsonFile": true,
+      "ExpectTrmrkGuidInNoteMdFile": true
+    }
+  }
+}
