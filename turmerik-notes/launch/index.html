@@ -94,5 +94,25 @@
       crossorigin="anonymous"
     ></script>
     <script src="script.js"></script>
+    <script>
+      const userAgent = navigator.userAgent;
+
+      const mobileRegexes = [
+        /Android/i,
+        /webOS/i,
+        /iPhone/i,
+        /iPad/i,
+        /iPod/i,
+        /BlackBerry/i,
+        /Windows Phone/i,
+        ///Windows/i,
+      ];
+
+      if (mobileRegexes.find((regex) => userAgent.match(regex))) {
+        const htmlDoc = document.getElementsByTagName("html")[0];
+
+        htmlDoc.style.fontSize = "3em";
+      }
+    </script>
   </body>
 </html>
