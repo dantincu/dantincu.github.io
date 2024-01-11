@@ -1,18 +1,16 @@
-@media only screen and (min-resolution: 300dpi) {  
-  html {
-    font-size: 3em;
-  }
+html {
+  font-size: 16px;
 }
 
 @media only screen and (min-resolution: 192dpi) {  
   html {
-    font-size: 2em;
+    font-size: 32px;
   }
 }
 
-@media only screen and (min-resolution: 96dpi) {  
+@media only screen and (min-resolution: 288dpi) {  
   html {
-    font-size: 1em;
+    font-size: 48px;
   }
 }
 
